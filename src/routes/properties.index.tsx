@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, stripSearchParams, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,19 @@ import {
 
 export const Route = createFileRoute("/properties/")({
   validateSearch: parsePropertySearch,
+  search: {
+    middlewares: [
+      stripSearchParams({
+        location: "",
+        city: "",
+        listingType: "",
+        propertyType: "",
+        minPrice: 0,
+        maxPrice: 0,
+        bedrooms: 0,
+      }),
+    ],
+  },
   head: () => ({
     meta: [
       { title: "Properties for Sale & Rent in India | EstateFlow" },
