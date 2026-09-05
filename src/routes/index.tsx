@@ -50,45 +50,57 @@ function Index() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="relative overflow-hidden border-b border-border">
-        <img
-          src="/images/why-keys.jpg"
-          alt=""
-          aria-hidden
-          className="absolute inset-0 size-full object-cover opacity-15"
-        />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28">
-          <div className="max-w-2xl fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
-              <Sparkles className="size-3.5 text-primary" /> 14+ verified listings live today
+      {/* Hero — refined editorial luxury */}
+      <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-6">
+        <div className="absolute inset-0">
+          <img
+            src="/images/hero-luxury.jpg"
+            alt=""
+            aria-hidden
+            className="size-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-background/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
+        </div>
+
+        <div className="relative z-10 w-full max-w-4xl space-y-12 text-center">
+          <header className="space-y-6 fade-up">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-primary">
+              EstateFlow &bull; The Curated Collection
             </span>
-            <h1 className="mt-5 font-display text-4xl leading-tight font-semibold sm:text-6xl">
-              Find a place that feels like your neighbourhood.
+            <h1 className="font-display text-5xl font-light leading-[1.08] tracking-tight sm:text-7xl">
+              Find a place that feels
+              <br />
+              like <span className="italic text-primary">your</span>{" "}
+              <span className="font-semibold">neighbourhood.</span>
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              EstateFlow brings together homes, plots and workspaces across India — with honest
-              pricing, real photos and direct owner enquiries.
+            <p className="mx-auto max-w-xl text-base text-muted-foreground">
+              Homes, plots and workspaces across India — with honest pricing, real photos and
+              direct owner enquiries.
             </p>
-          </div>
-          <div className="mt-8 max-w-4xl">
+          </header>
+
+          <div className="mx-auto max-w-3xl fade-up">
             <SearchBar />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h2 className="font-display text-3xl font-semibold">Featured properties</h2>
-            <p className="mt-1 text-muted-foreground">Fresh listings picked from across the country.</p>
-          </div>
-          <Button asChild variant="ghost" className="gap-1">
-            <Link to="/properties" search={{}}>
-              View all <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+      {/* Featured residences */}
+      <section className="mx-auto max-w-6xl px-4 py-24">
+        <div className="mb-16 flex items-baseline justify-between gap-4">
+          <h2 className="font-display text-3xl font-light italic sm:text-4xl">
+            Featured Residences
+          </h2>
+          <Link
+            to="/properties"
+            search={{}}
+            className="border-b border-primary/40 pb-1 text-[11px] font-semibold uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
+          >
+            View all
+          </Link>
         </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
           {featured?.map((property) => (
             <PropertyCard
               key={property.id}
@@ -100,10 +112,15 @@ function Index() {
         </div>
       </section>
 
-      <section className="bg-secondary/50 py-16">
+      {/* Popular locations */}
+      <section className="border-y border-border bg-secondary/40 py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className="font-display text-3xl font-semibold">Popular locations</h2>
-          <div className="mt-8 grid gap-5 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mb-16 border-b border-border pb-6">
+            <h2 className="font-display text-3xl font-light italic sm:text-4xl">
+              Popular locations
+            </h2>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-5">
             {CITIES.map((city) => (
               <Link
                 key={city.name}
@@ -115,7 +132,7 @@ function Index() {
                   src={city.image}
                   alt={`Property in ${city.name}`}
                   loading="lazy"
-                  className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="aspect-[3/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 font-display text-lg font-semibold text-white">
                   {city.name}
@@ -126,9 +143,14 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <h2 className="font-display text-3xl font-semibold">Browse by property type</h2>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+      {/* Browse by type */}
+      <section className="mx-auto max-w-6xl px-4 py-24">
+        <div className="mb-16 border-b border-border pb-6">
+          <h2 className="font-display text-3xl font-light italic sm:text-4xl">
+            Browse by property type
+          </h2>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {PROPERTY_TYPES.map((type) => (
             <Link
               key={type}
@@ -140,7 +162,7 @@ function Index() {
                 src={TYPE_IMAGES[type]}
                 alt={type}
                 loading="lazy"
-                className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <p className="p-4 font-display text-lg font-semibold">{type}</p>
             </Link>
@@ -148,34 +170,42 @@ function Index() {
         </div>
       </section>
 
+      {/* Trust */}
       <section className="border-y border-border bg-card">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:grid-cols-3">
           {[
             { icon: ShieldCheck, title: "Verified listings", body: "Every property is reviewed before it goes live." },
             { icon: KeyRound, title: "Direct enquiries", body: "Reach owners without middlemen or hidden fees." },
             { icon: Sparkles, title: "Saved searches", body: "Favourite homes and pick up where you left off." },
           ].map((item) => (
             <div key={item.title}>
-              <item.icon className="size-8 text-primary" />
-              <h3 className="mt-4 font-display text-xl font-semibold">{item.title}</h3>
-              <p className="mt-2 text-muted-foreground">{item.body}</p>
+              <item.icon className="size-7 text-primary" strokeWidth={1.5} />
+              <h3 className="mt-5 font-display text-xl font-medium">{item.title}</h3>
+              <div className="mt-3 h-px w-10 bg-primary/50" />
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-20 text-center">
-        <h2 className="font-display text-3xl font-semibold sm:text-4xl">Ready to list your property?</h2>
-        <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+      {/* CTA */}
+      <section className="mx-auto max-w-6xl px-4 py-28 text-center">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-primary">
+          List with us
+        </span>
+        <h2 className="mt-5 font-display text-3xl font-light sm:text-5xl">
+          Ready to list <span className="italic">your property?</span>
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
           Create a free EstateFlow account, add your listing details and start receiving enquiries.
         </p>
-        <div className="mt-6 flex justify-center gap-3">
-          <Button asChild size="lg">
+        <div className="mt-8 flex justify-center gap-3">
+          <Button asChild size="lg" className="rounded-full px-8">
             <Link to="/register">Create free account</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline" className="rounded-full px-8">
             <Link to="/properties" search={{}}>
-              Browse listings
+              Browse listings <ArrowRight className="size-4" />
             </Link>
           </Button>
         </div>
