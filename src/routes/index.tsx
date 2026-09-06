@@ -243,12 +243,13 @@ function Index() {
           </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {PROPERTY_TYPES.map((type) => (
+          {PROPERTY_TYPES.map((type, i) => (
             <Link
               key={type}
               to="/properties"
               search={{ propertyType: type }}
-              className="group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md"
+              className="reveal group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md"
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
               <img
                 src={TYPE_IMAGES[type]}
