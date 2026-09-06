@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, KeyRound, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, KeyRound, MapPin, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,7 +9,8 @@ import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useFavoriteIds, useToggleFavorite } from "@/hooks/useFavorites";
-import { CITIES, PROPERTY_TYPES, TYPE_IMAGES, type Property } from "@/lib/estate";
+import { useReveal } from "@/hooks/useReveal";
+import { CITIES, PROPERTY_TYPES, TYPE_IMAGES, formatPrice, type Property } from "@/lib/estate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,50 +47,134 @@ function Index() {
   });
   const { data: favoriteIds } = useFavoriteIds();
   const { toggle } = useToggleFavorite();
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const onHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const { innerWidth, innerHeight } = window;
+    setParallax({
+      x: (e.clientX / innerWidth - 0.5) * 18,
+      y: (e.clientY / innerHeight - 0.5) * 12,
+    });
+  }, []);
+  const featuredRef = useReveal<HTMLElement>();
+  const citiesRef = useReveal<HTMLElement>();
+  const typesRef = useReveal<HTMLElement>();
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero — refined editorial luxury */}
-      <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-6">
+      {/* Hero — immersive animated luxury */}
+      <section
+        className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-6"
+        onMouseMove={onHeroMouseMove}
+      >
+        {/* Backdrop: photo + drifting warm light */}
         <div className="absolute inset-0">
           <img
             src="/images/hero-luxury.jpg"
             alt=""
             aria-hidden
-            className="size-full object-cover opacity-30"
+            className="size-full scale-105 object-cover opacity-40"
+            style={{
+              transform: `scale(1.08) translate(${parallax.x}px, ${parallax.y}px)`,
+              transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
-          <div className="absolute inset-0 bg-background/80" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
+          <div className="absolute inset-0 bg-background/70" />
+          <div className="drift absolute -left-32 top-10 size-[34rem] rounded-full bg-primary/15 blur-3xl" />
+          <div className="drift-alt absolute -right-40 bottom-0 size-[38rem] rounded-full bg-[oklch(0.828_0.189_84.429/0.14)] blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+        </div>
+
+        {/* Floating accent cards */}
+        <div
+          className="float-slow absolute left-[6%] top-[22%] z-10 hidden rounded-2xl border border-border bg-card/90 p-4 shadow-xl backdrop-blur lg:block"
+          style={{ "--tilt": "-4deg" } as React.CSSProperties}
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <BadgeCheck className="size-5" />
+            </span>
+            <div>
+              <p className="font-display text-sm font-semibold">Verified listing</p>
+              <p className="text-xs text-muted-foreground">Reviewed before going live</p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="float-slower absolute right-[7%] top-[30%] z-10 hidden rounded-2xl border border-border bg-card/90 p-4 shadow-xl backdrop-blur lg:block"
+          style={{ "--tilt": "3deg" } as React.CSSProperties}
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Star className="size-5" />
+            </span>
+            <div>
+              <p className="font-display text-sm font-semibold">4.9 owner rating</p>
+              <p className="text-xs text-muted-foreground">Across 5 cities</p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="float-slow absolute bottom-[18%] left-[12%] z-10 hidden rounded-2xl border border-border bg-card/90 p-4 shadow-xl backdrop-blur lg:block"
+          style={{ "--tilt": "2deg", animationDelay: "1.4s" } as React.CSSProperties}
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <MapPin className="size-5" />
+            </span>
+            <div>
+              <p className="font-display text-sm font-semibold">From {formatPrice(4500000, "Sale")}</p>
+              <p className="text-xs text-muted-foreground">Homes across India</p>
+            </div>
+          </div>
         </div>
 
         <div className="relative z-10 w-full max-w-4xl space-y-12 text-center">
-          <header className="space-y-6 fade-up">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-primary">
+          <header className="space-y-6">
+            <span className="rise-in inline-block rounded-full border border-primary/30 bg-card/60 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.4em] text-primary backdrop-blur">
               EstateFlow &bull; The Curated Collection
             </span>
-            <h1 className="font-display text-5xl font-light leading-[1.08] tracking-tight sm:text-7xl">
+            <h1
+              className="rise-in font-display text-5xl font-light leading-[1.08] tracking-tight sm:text-7xl"
+              style={{ animationDelay: "0.15s" }}
+            >
               Find a place that feels
               <br />
               like <span className="italic text-primary">your</span>{" "}
               <span className="font-semibold">neighbourhood.</span>
             </h1>
-            <p className="mx-auto max-w-xl text-base text-muted-foreground">
+            <p
+              className="rise-in mx-auto max-w-xl text-base text-muted-foreground"
+              style={{ animationDelay: "0.3s" }}
+            >
               Homes, plots and workspaces across India — with honest pricing, real photos and
               direct owner enquiries.
             </p>
           </header>
 
-          <div className="mx-auto max-w-3xl fade-up">
+          <div className="rise-in mx-auto max-w-3xl" style={{ animationDelay: "0.45s" }}>
             <SearchBar />
+          </div>
+        </div>
+
+        {/* Marquee strip */}
+        <div className="absolute inset-x-0 bottom-0 z-10 border-t border-border/60 bg-background/70 py-3 backdrop-blur">
+          <div className="flex overflow-hidden">
+            <div className="marquee flex shrink-0 items-center gap-10 pr-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+              {[...CITIES.map((c) => c.name), "Verified Listings", "Direct Owners", "Honest Pricing", ...CITIES.map((c) => c.name), "Verified Listings", "Direct Owners", "Honest Pricing"].map((label, i) => (
+                <span key={i} className="flex items-center gap-10 whitespace-nowrap">
+                  {label} <Sparkles className="size-3 text-primary/60" />
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured residences */}
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <div className="mb-16 flex items-baseline justify-between gap-4">
+      <section ref={featuredRef} className="mx-auto max-w-6xl px-4 py-24">
+        <div className="reveal mb-16 flex items-baseline justify-between gap-4">
           <h2 className="font-display text-3xl font-light italic sm:text-4xl">
             Featured Residences
           </h2>
@@ -101,32 +187,38 @@ function Index() {
           </Link>
         </div>
         <div className="grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {featured?.map((property) => (
-            <PropertyCard
+          {featured?.map((property, i) => (
+            <div
               key={property.id}
-              property={property}
-              isFavorite={favoriteIds?.includes(property.id) ?? false}
-              onToggleFavorite={toggle}
-            />
+              className="reveal"
+              style={{ transitionDelay: `${(i % 3) * 120}ms` }}
+            >
+              <PropertyCard
+                property={property}
+                isFavorite={favoriteIds?.includes(property.id) ?? false}
+                onToggleFavorite={toggle}
+              />
+            </div>
           ))}
         </div>
       </section>
 
       {/* Popular locations */}
-      <section className="border-y border-border bg-secondary/40 py-24">
+      <section ref={citiesRef} className="border-y border-border bg-secondary/40 py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-16 border-b border-border pb-6">
+          <div className="reveal mb-16 border-b border-border pb-6">
             <h2 className="font-display text-3xl font-light italic sm:text-4xl">
               Popular locations
             </h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {CITIES.map((city) => (
+            {CITIES.map((city, i) => (
               <Link
                 key={city.name}
                 to="/properties"
                 search={{ city: city.name }}
-                className="group relative overflow-hidden rounded-2xl border border-border"
+                className="reveal group relative overflow-hidden rounded-2xl border border-border"
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <img
                   src={city.image}
@@ -144,19 +236,20 @@ function Index() {
       </section>
 
       {/* Browse by type */}
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <div className="mb-16 border-b border-border pb-6">
+      <section ref={typesRef} className="mx-auto max-w-6xl px-4 py-24">
+        <div className="reveal mb-16 border-b border-border pb-6">
           <h2 className="font-display text-3xl font-light italic sm:text-4xl">
             Browse by property type
           </h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {PROPERTY_TYPES.map((type) => (
+          {PROPERTY_TYPES.map((type, i) => (
             <Link
               key={type}
               to="/properties"
               search={{ propertyType: type }}
-              className="group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md"
+              className="reveal group overflow-hidden rounded-2xl border border-border bg-card transition-shadow hover:shadow-md"
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
               <img
                 src={TYPE_IMAGES[type]}
