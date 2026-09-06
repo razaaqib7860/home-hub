@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 /**
  * Adds `.revealed` to any descendant with `.reveal` when it scrolls into view.
+ * Handles late-rendered children (e.g. async query data) via MutationObserver.
  * Attach the returned ref to a section wrapper.
  */
 export function useReveal<T extends HTMLElement>() {
@@ -10,23 +11,37 @@ export function useReveal<T extends HTMLElement>() {
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const targets = root.querySelectorAll<HTMLElement>(".reveal");
-    if (!targets.length) return;
 
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
+            io.unobserve(entry.target);
           }
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.1 },
     );
 
-    targets.forEach((t) => observer.observe(t));
-    return () => observer.disconnect();
+    const observed = new WeakSet<Element>();
+    const scan = () => {
+      root.querySelectorAll(".reveal").forEach((el) => {
+        if (!observed.has(el)) {
+          observed.add(el);
+          io.observe(el);
+        }
+      });
+    };
+    scan();
+
+    const mo = new MutationObserver(scan);
+    mo.observe(root, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
   }, []);
 
   return ref;
