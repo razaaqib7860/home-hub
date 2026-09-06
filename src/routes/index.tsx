@@ -236,8 +236,8 @@ function Index() {
       </section>
 
       {/* Browse by type */}
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <div className="mb-16 border-b border-border pb-6">
+      <section ref={typesRef} className="mx-auto max-w-6xl px-4 py-24">
+        <div className="reveal mb-16 border-b border-border pb-6">
           <h2 className="font-display text-3xl font-light italic sm:text-4xl">
             Browse by property type
           </h2>
