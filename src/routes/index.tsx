@@ -47,6 +47,17 @@ function Index() {
   });
   const { data: favoriteIds } = useFavoriteIds();
   const { toggle } = useToggleFavorite();
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const onHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const { innerWidth, innerHeight } = window;
+    setParallax({
+      x: (e.clientX / innerWidth - 0.5) * 18,
+      y: (e.clientY / innerHeight - 0.5) * 12,
+    });
+  }, []);
+  const featuredRef = useReveal<HTMLElement>();
+  const citiesRef = useReveal<HTMLElement>();
+  const typesRef = useReveal<HTMLElement>();
 
   return (
     <div className="min-h-screen bg-background">
