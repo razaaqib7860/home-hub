@@ -173,8 +173,8 @@ function Index() {
       </section>
 
       {/* Featured residences */}
-      <section className="mx-auto max-w-6xl px-4 py-24">
-        <div className="mb-16 flex items-baseline justify-between gap-4">
+      <section ref={featuredRef} className="mx-auto max-w-6xl px-4 py-24">
+        <div className="reveal mb-16 flex items-baseline justify-between gap-4">
           <h2 className="font-display text-3xl font-light italic sm:text-4xl">
             Featured Residences
           </h2>
@@ -187,32 +187,38 @@ function Index() {
           </Link>
         </div>
         <div className="grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-          {featured?.map((property) => (
-            <PropertyCard
+          {featured?.map((property, i) => (
+            <div
               key={property.id}
-              property={property}
-              isFavorite={favoriteIds?.includes(property.id) ?? false}
-              onToggleFavorite={toggle}
-            />
+              className="reveal"
+              style={{ transitionDelay: `${(i % 3) * 120}ms` }}
+            >
+              <PropertyCard
+                property={property}
+                isFavorite={favoriteIds?.includes(property.id) ?? false}
+                onToggleFavorite={toggle}
+              />
+            </div>
           ))}
         </div>
       </section>
 
       {/* Popular locations */}
-      <section className="border-y border-border bg-secondary/40 py-24">
+      <section ref={citiesRef} className="border-y border-border bg-secondary/40 py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-16 border-b border-border pb-6">
+          <div className="reveal mb-16 border-b border-border pb-6">
             <h2 className="font-display text-3xl font-light italic sm:text-4xl">
               Popular locations
             </h2>
           </div>
           <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {CITIES.map((city) => (
+            {CITIES.map((city, i) => (
               <Link
                 key={city.name}
                 to="/properties"
                 search={{ city: city.name }}
-                className="group relative overflow-hidden rounded-2xl border border-border"
+                className="reveal group relative overflow-hidden rounded-2xl border border-border"
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <img
                   src={city.image}
