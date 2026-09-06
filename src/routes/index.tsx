@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, KeyRound, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, KeyRound, MapPin, ShieldCheck, Sparkles, Star } from "lucide-react";
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,7 +9,8 @@ import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useFavoriteIds, useToggleFavorite } from "@/hooks/useFavorites";
-import { CITIES, PROPERTY_TYPES, TYPE_IMAGES, type Property } from "@/lib/estate";
+import { useReveal } from "@/hooks/useReveal";
+import { CITIES, PROPERTY_TYPES, TYPE_IMAGES, formatPrice, type Property } from "@/lib/estate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
