@@ -182,3 +182,111 @@
     transform: none;
   }
 }
+
+/* Staggered hero entrance */
+@utility rise-in {
+  opacity: 0;
+  animation: ef-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes ef-rise {
+  from {
+    opacity: 0;
+    transform: translateY(34px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Floating decor cards */
+@utility float-slow {
+  animation: ef-float 7s ease-in-out infinite;
+}
+
+@utility float-slower {
+  animation: ef-float 10s ease-in-out infinite reverse;
+}
+
+@keyframes ef-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-16px) rotate(var(--tilt, 0deg));
+  }
+}
+
+/* Drifting warm light blobs */
+@utility drift {
+  animation: ef-drift 18s ease-in-out infinite alternate;
+}
+
+@utility drift-alt {
+  animation: ef-drift-alt 22s ease-in-out infinite alternate;
+}
+
+@keyframes ef-drift {
+  from {
+    transform: translate(-8%, -4%) scale(1);
+  }
+  to {
+    transform: translate(10%, 8%) scale(1.15);
+  }
+}
+
+@keyframes ef-drift-alt {
+  from {
+    transform: translate(6%, 6%) scale(1.1);
+  }
+  to {
+    transform: translate(-10%, -6%) scale(0.95);
+  }
+}
+
+/* Marquee strip */
+@utility marquee {
+  animation: ef-marquee 30s linear infinite;
+}
+
+@keyframes ef-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scroll reveal (pairs with useReveal hook adding .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .rise-in,
+  .float-slow,
+  .float-slower,
+  .drift,
+  .drift-alt,
+  .marquee {
+    animation: none;
+  }
+}
